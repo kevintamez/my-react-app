@@ -6,9 +6,10 @@ import Paper from '@mui/material/Paper';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+    padding: theme.spacing(2),
+    margin: theme.spacing(3),
+    textAlign: 'right',
+    color: theme.palette.text.primary,
   }));
 
 export class ExercisesGiriga extends Component {
@@ -18,12 +19,13 @@ export class ExercisesGiriga extends Component {
         smallerThan: [],
         greaterThan: [],
         filtered: [],
+        filteredArray: [],
         filteredRemovedArray: [],
         formatedDate: null,
         x: 0,
         y:-1,
         z:4,
-        sorteredNumbers: [],
+        OrderedNumbers: [],
         EmployeesList: ['Ruben','Kevin','Julian','Krishna','Ashwanth','Monis Rizvi'],
         date1:'04/04/2021',
         date1Formatted: '',
@@ -41,7 +43,7 @@ export class ExercisesGiriga extends Component {
         const diffDays = Math.ceil(Diff / (1000 * 60 * 60 * 24));
 
         let newState = {...this.state};
-        newState.dateDiff = diffDays;
+        newState.dateDiff = diffDays + ' Days';
         newState.date1Formatted = date1.toDateString();
         newState.date2Formatted = date2.toDateString();
         console.log(newState);
@@ -49,7 +51,6 @@ export class ExercisesGiriga extends Component {
     }
 
     filterList = () => {
-        console.log("filter list");
         let newState = {...this.state}
         let noDup = this.state.arr.filter((c, index) => {
             return this.state.arr.indexOf(c) === index;
@@ -60,8 +61,6 @@ export class ExercisesGiriga extends Component {
     }
 
     orderThreeVariables = () => {
-        console.log("ordering");
-        
         var sorting = [];
         sorting.push(this.state.x);
         sorting.push(this.state.y);
@@ -71,12 +70,11 @@ export class ExercisesGiriga extends Component {
             console.log(a, b);
             return a-b;
         })
-        
-        this.setState({...this.state, sorteredNumbers: sorting})
+        console.log(sorting)
+        this.setState({...this.state, OrderedNumbers: sorting})
     }
 
     formatDate = () => {
-        console.log("formating date");
         var d = new Date();
         let hours = d.getHours(), 
             minutes = d.getMinutes(), 
@@ -89,22 +87,41 @@ export class ExercisesGiriga extends Component {
     }
 
     filterArray = () => {
-        console.log("filtering array");
         let number = this.state.numberToFilter;
-        console.log(number);
-        let filtered = this.state.arr.filter(element=> element === number);
-        let greaterThan = this.state.arr.filter(element=> element > number);
-        let smallerThan = this.state.arr.filter(element=> element < number);
-        
-        this.setState({...this.state,
-            filteredArray: filtered,
-            greaterThan: greaterThan,
-            smallerThan: smallerThan,
+        var filteredArr = this.state.arr.filter(element=> element === number);
+        var greaterThan = this.state.arr.filter(element=> element > number);
+        var smallerThan = this.state.arr.filter(element=> element < number);
 
+        this.setState({...this.state,
+            filteredArray: filteredArr,
+            greaterThan: greaterThan,
+            smallerThan: smallerThan
         });
 
-        console.log(filtered);
+        console.log(filteredArr);
        
+    }
+    resetState = () => {
+        this.setState({
+            arr: [14,3,6,4,3,7,9,5,5],
+            numberToFilter: 5,
+            smallerThan: [],
+            greaterThan: [],
+            filtered: [],
+            filteredArray: [],
+            filteredRemovedArray: [],
+            formatedDate: null,
+            x: 0,
+            y:-1,
+            z:4,
+            OrderedNumbers: [],
+            EmployeesList: ['Ruben','Kevin','Julian','Krishna','Ashwanth','Monis Rizvi'],
+            date1:'04/04/2021',
+            date1Formatted: '',
+            date2: '08/28/2021',
+            date2Formatted: '',
+            dateDiff: ''
+        })
     }
     handleChange = (e) => {
         this.setState({...this.state, numberToFilter: e.target.value});
@@ -113,41 +130,78 @@ export class ExercisesGiriga extends Component {
         return(
             <div>
                 
-                <Stack
-                    direction="row"
-                    container spacing={2} 
-                    >
+                <Stack  direction="row"
+                        spacing={2} 
+                        >
 
-                    <Grid item sm={6}
-                    justifyContent="flex-start"
-                    alignItems="baseline"> 
+                    <Grid   item sm={6}
+                            justifyContent="flex-start"
+                            alignItems="baseline"> 
+                    <Item>
                         {
-                        this.state.arr.map((element, index) => (
-                            <span key={index}>{element} </span>
-                        ))
+                            this.state.arr.map((element, index) => (
+                                <span key={index}>{element} </span>
+                            ))
                         }
                         <br></br>
-                      
-                        
-                        {
-                            this.state.filteredRemovedArray? (
-                                
-                                this.state.filteredRemovedArray.map((element, index) => (
-                                    <span key={index}>{element} </span>
-                                ))
+                        <b>
+                            {
+                                this.state.filteredRemovedArray? (
+                                    this.state.filteredRemovedArray.map((element, index) => (
+                                        <span key={index}>{element} </span>
+                                    ))
 
-                            ) : (null)
-                        }
-                        <h3>{this.state.OrderedNumbers}</h3>
+                                ) : (null)
+                            }
+                        </b>
+                    </Item>
+                    <Item>
                         Current time in HH:MM:SS
                             <h3>{this.state.formatedDate}</h3>
-
-                        <Item style={{textAlignt: 'right'}}>
-
-                            Ordered values x, y and z
-                            {this.state.OrderedNumbers}
-                        </Item>
-
+                    </Item>
+                    <Item>
+                        <div>
+                            Ordered values x=0, y=-1, and z=4
+                        </div>
+                        <b>
+                            {
+                                this.state.OrderedNumbers.map((element, index) => (
+                                    <span key={index}>{element} </span>
+                                ))
+                            }
+                        </b>
+                    </Item>
+                    <Item>
+                        Please type a number to filter in a list: 
+                        <input type="number" 
+                        value={this.state.numberToFilter.toString()} 
+                        onChange={this.handleChange}/>
+                        <div>
+                            Elements in array: {' '}
+                                {
+                                    this.state.filteredArray.map((element, index) => (
+                                        <span key={index}>{element} </span>
+                                    ))
+                                }
+                        </div>
+                        <div>
+                            Greater than {this.state.numberToFilter + ': '}
+                                {
+                                    this.state.greaterThan.map((element, index) => (
+                                        <span key={index}>{element} </span>
+                                    ))
+                                }
+                        </div>
+                        <div>
+                            Smaller than {this.state.numberToFilter + ': '}
+                                {
+                                    this.state.smallerThan.map((element, index) => (
+                                        <span key={index}>{element} </span>
+                                    ))
+                                }
+                        </div>
+                    </Item>
+                    <Item>
                         The Difference between date:
                             <h3>{this.state.date1}</h3>
                             <h3>{this.state.date1Formatted}</h3>
@@ -161,53 +215,32 @@ export class ExercisesGiriga extends Component {
                         <span>
                             <h3>{this.state.dateDiff}</h3>
                         </span>
-                       
-
-                        Please type a number to filter in a list: <input type="number" value={this.state.numberToFilter} onChange={this.handleChange}/>
-                            {this.state.filteredArray}
-
-                        <div>
-                            Elements in array:
-                                {
-                                    this.state.filtered.map((element, index) => (
-                                        <span key={index}>{element} </span>
-                                    ))
-                                }
-
-                        </div>
-                        <div>
-                            Greater than
-                                {
-                                    this.state.greaterThan.map((element, index) => (
-                                        <span key={index}>{element} </span>
-                                    ))
-                                }
-
-                        </div>
-                        <div>
-                            Smaller than
-                                {
-                                    this.state.smallerThan.map((element, index) => (
-                                        <span key={index}>{element} </span>
-                                    ))
-                                }
-                        </div>
+                    </Item>
+                   
                     </Grid>
                     <Grid item sm={6}> 
-                        <Button variant="contained" onClick={this.filterList}>Remove duplicates of List</Button>
-                    <div>
-                        <Button variant="contained" onClick={this.formatDate}>format date</Button>
-                    </div>
-                    <div>
-                        <Button variant="contained" onClick={this.orderThreeVariables}>Order List</Button>
-                    </div>
-                    <div>
-                        <Button variant="contained" onClick={this.filterArray}>Filter numbers from a list</Button>
-                    </div>
-                    <div>
-                        <Button variant="contained" onClick={this.getDaysDiff}>Get difference between days</Button>
-                    </div>
-                        
+                    <Item style={{textAlign: 'left'}}>
+                        <div>
+                            <Button variant="contained" onClick={this.filterList}>Remove duplicates of List</Button>
+
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.formatDate}>format date</Button>
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.orderThreeVariables}>Order List</Button>
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.filterArray}>Filter numbers from a list</Button>
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.getDaysDiff}>Get difference between days</Button>
+                        </div>
+                        <div>
+                            <Button color='error' variant="contained" onClick={this.resetState}>Reset State</Button>
+
+                        </div>
+                    </Item>
                     </Grid>
                 </Stack>
             </div>
